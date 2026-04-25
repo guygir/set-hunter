@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Hunter — TCG Collector Roguelike</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <!-- Required: Vibe Jam 2026 tracking widget -->
+  <script async src="https://vibej.am/2026/widget.js"></script>
+</head>
+<body>
+
+  <!-- ── INTRO SCREEN ─────────────────────────────────────────── -->
+  <div id="intro-screen">
+    <div class="intro-content">
+      <h1 class="intro-title">SET HUNTER</h1>
+      <div class="intro-card-backs" aria-hidden="true">
+        <div class="pack-visual intro-pack-card intro-pack-home">
+          <div class="pack-shine"></div>
+          <div class="pack-logo"><img src="assets/sets/home.png" alt=""></div>
+          <div class="pack-set-label">Home & Farm</div>
+          <div class="pack-cards-label">5 CARDS</div>
+        </div>
+        <div class="pack-visual intro-pack-card intro-pack-aquatic">
+          <div class="pack-shine"></div>
+          <div class="pack-logo"><img src="assets/sets/aquatic.png" alt=""></div>
+          <div class="pack-set-label">Aquatic World</div>
+          <div class="pack-cards-label">5 CARDS</div>
+        </div>
+        <div class="pack-visual intro-pack-card intro-pack-desert">
+          <div class="pack-shine"></div>
+          <div class="pack-logo"><img src="assets/sets/desert.png" alt=""></div>
+          <div class="pack-set-label">Desert</div>
+          <div class="pack-cards-label">5 CARDS</div>
+        </div>
+        <div class="pack-visual intro-pack-card intro-pack-savanna">
+          <div class="pack-shine"></div>
+          <div class="pack-logo"><img src="assets/sets/savanna.png" alt=""></div>
+          <div class="pack-set-label">African Savanna</div>
+          <div class="pack-cards-label">5 CARDS</div>
+        </div>
+      </div>
+      <p class="intro-subtitle">TCG Collector Roguelike</p>
+      <p class="intro-desc">
+        Open packs. Buy singles. Sell duplicates.<br>
+        Complete the set — as fast as possible.
+      </p>
+      <div class="intro-actions">
+        <button id="btn-start" class="btn-primary btn-large">Start Collecting</button>
+        <button id="btn-skill-tree" class="btn-secondary">⭐ Skill Tree</button>
+        <button id="btn-codex" class="btn-secondary">📚 Codex</button>
+        <button class="btn-secondary btn-leaderboard">🏆 Leaderboard</button>
+      </div>
+      <div class="intro-ace-header">
+        <img src="assets/misc/ace_tracker.png" class="intro-ace-icon" alt=""
+          onerror="this.style.display='none'">
+        <span class="intro-ace-label">Worldwide Ace Discoveries</span>
+      </div>
+      <div class="global-ace-status ace-tracker-large">Loading…</div>
+      <p class="intro-credit">A Vibe Jam 2026 Entry</p>
+    </div>
+  </div>
+
+  <!-- ── LEVEL SELECT SCREEN ─────────────────────────────────── -->
+  <div id="level-select" class="overlay hidden">
+    <div class="level-select-modal">
+      <h2 class="level-select-title">SH Choose Your Set</h2>
+      <p class="level-select-sub">Complete a set to unlock the next level</p>
+      <div id="level-grid" class="level-grid"></div>
+      <button id="btn-back-intro" class="btn-secondary" style="margin-top:18px">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── PERK SELECTION SCREEN ────────────────────────────────── -->
+  <div id="perk-screen" class="overlay hidden">
+    <div class="perk-modal">
+      <div class="perk-modal-header">
+        <div class="perk-modal-icon">🎴</div>
+        <h2 class="perk-modal-title">Choose Your Perk</h2>
+        <p class="perk-modal-sub">One modifier that lasts the whole run</p>
+      </div>
+      <div id="perk-grid" class="perk-grid"></div>
+      <button id="btn-skip-perk" class="btn-secondary">Play without a perk</button>
+    </div>
+  </div>
+
+  <!-- ── SKILL TREE SCREEN ────────────────────────────────────── -->
+  <div id="skill-screen" class="overlay hidden">
+    <div class="skill-modal">
+      <button id="btn-close-skill" class="skill-close-btn">✕ Close</button>
+      <div id="skill-tree-content"></div>
+    </div>
+  </div>
+
+  <!-- ── GAME SCREEN ──────────────────────────────────────────── -->
+  <div id="game-screen" class="hidden">
+
+    <!-- HUD -->
+    <header id="hud">
+      <div class="hud-section hud-left">
+        <span id="set-theme" class="set-theme"></span>
+        <span id="set-name"  class="set-name"></span>
+        <span id="perk-badge" class="perk-badge hidden"></span>
+      </div>
+      <div class="hud-section hud-center">
+        <div class="stat-block">
+          <span class="stat-label">BUDGET</span>
+          <span id="stat-budget" class="stat-value stat-budget">$200</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">SPENT</span>
+          <span id="stat-spent" class="stat-value">$0</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">PROGRESS</span>
+          <span id="stat-progress" class="stat-value">0/20</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label">DAY</span>
+          <span id="stat-day" class="stat-value">1</span>
+        </div>
+        <div id="debt-indicator" class="debt-indicator hidden"></div>
+      </div>
+      <div class="hud-section hud-right">
+        <button id="btn-mute"           class="mute-btn icon-btn" title="Toggle sound">
+          <img src="assets/buttons/sound.png" class="btn-icon-img" alt="🔊" onerror="this.outerHTML='🔊'">
+          <span class="btn-label">Sound</span></button>
+        <button id="btn-skill-tree-hud" class="mute-btn icon-btn" title="Skill Tree">
+          <img src="assets/buttons/skill.png" class="btn-icon-img" alt="⭐" onerror="this.outerHTML='⭐'">
+          <span class="btn-label">Skills</span></button>
+        <button id="btn-codex-hud"      class="mute-btn icon-btn" title="Codex">
+          <img src="assets/buttons/codex.png" class="btn-icon-img" alt="📚" onerror="this.outerHTML='📚'">
+          <span class="btn-label">Codex</span></button>
+        <button id="btn-contacts"       class="mute-btn icon-btn" title="NPC Contacts">
+          <img src="assets/buttons/contacts.png" class="btn-icon-img" alt="👥" onerror="this.outerHTML='👥'">
+          <span class="btn-label">NPCs</span></button>
+        <button id="btn-tutorial"       class="mute-btn icon-btn" title="Show Tutorial">
+          <img src="assets/buttons/tutorial.png" class="btn-icon-img" alt="?" onerror="this.outerHTML='?'">
+          <span class="btn-label">Guide</span></button>
+        <button class="mute-btn icon-btn btn-leaderboard"           title="Leaderboard">
+          <img src="assets/buttons/leaderboard.png" class="btn-icon-img" alt="🏆" onerror="this.outerHTML='🏆'">
+          <span class="btn-label">Ranks</span></button>
+        <button id="btn-main-menu"    class="mute-btn icon-btn" title="Back to main menu">
+          <img src="assets/buttons/menu.png" class="btn-icon-img" alt="Menu" onerror="this.outerHTML='Menu'">
+          <span class="btn-label">Menu</span></button>
+        <button id="btn-portal"         class="portal-btn"    title="Jump to another Vibe Jam game">⬡ Vibe Jam Portal</button>
+      </div>
+    </header>
+
+    <!-- Event Banner -->
+    <div id="event-banner" class="hidden">
+      <span id="event-icon"></span>
+      <span id="event-text"></span>
+    </div>
+
+    <!-- Main Layout -->
+    <div id="main-layout">
+
+      <!-- LEFT: Shop -->
+      <aside id="shop-panel" class="panel">
+        <div class="panel-title">Pack Shop</div>
+
+        <div class="pack-container">
+          <div id="pack-visual" class="pack-visual">
+            <div class="pack-shine"></div>
+            <div class="pack-logo">SH</div>
+            <div id="pack-set-label" class="pack-set-label">—</div>
+            <div class="pack-cards-label">5 CARDS</div>
+          </div>
+          <div id="pack-price-display" class="pack-price-display">$10 / pack</div>
+          <div id="pack-discount-label" class="discount-label hidden"></div>
+          <div id="allowance-label" class="allowance-label">+$5/day</div>
+        </div>
+
+        <div class="daily-action-header">
+          <span class="daily-action-label">Daily Action</span>
+          <span class="daily-action-hint">each choice passes one day</span>
+        </div>
+        <div class="shop-buttons">
+          <button id="btn-open-1"  class="btn-primary">Open 1 Pack — $10</button>
+          <button id="btn-open-3"  class="btn-secondary">Open 3 Packs — $27 ($9/ea)</button>
+          <button id="btn-open-5"  class="btn-secondary">Open 5 Packs — $40 ($8/ea)</button>
+          <button id="btn-pass-day" class="btn-secondary btn-pass">⏭ Rest — pass the day</button>
+          <button id="btn-thief-claim" class="btn-secondary btn-skill-action hidden">Claim Cheapest Missing</button>
+          <button id="btn-timekeeper-rewind" class="btn-secondary btn-skill-action hidden">Rewind Last Day</button>
+        </div>
+
+        <div class="shop-odds">
+          <div class="odds-row"><span class="odds-dot dot-common"></span>Common — 60%</div>
+          <div class="odds-row"><span class="odds-dot dot-uncommon"></span>Uncommon — 25%</div>
+          <div class="odds-row"><span class="odds-dot dot-rare"></span>Rare — 12%</div>
+          <div class="odds-row"><span class="odds-dot dot-legendary"></span>Legendary — <span id="odds-legendary">3%</span></div>
+        </div>
+      </aside>
+
+      <!-- CENTER: Collection -->
+      <main id="collection-panel" class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Collection</div>
+          <div class="panel-header-row">
+            <div id="filter-tabs">
+              <button class="filter-tab active" data-filter="all">All</button>
+              <button class="filter-tab" data-filter="missing">Missing</button>
+              <button class="filter-tab" data-filter="dupes">Dupes</button>
+            </div>
+            <button id="btn-sell-all-dupes" class="btn-secondary btn-sell-dupes" disabled>
+              Sell Dupes
+            </button>
+          </div>
+        </div>
+        <div id="rarity-bars"></div>
+        <div id="collection-grid" class="card-grid"></div>
+        <!-- Worldwide Ace Tracker — below the collection grid -->
+        <div id="ace-tracker-section" class="ace-tracker-section">
+          <div class="ace-tracker-header">
+            <img src="assets/misc/ace_tracker.png" class="ace-tracker-hero" alt=""
+              onerror="this.style.display='none'">
+            <div class="ace-tracker-header-text">
+              <div class="ace-tracker-title">Worldwide Ace Discoveries</div>
+              <div id="ace-tracker-ingame" class="global-ace-status ace-tracker-large">Loading…</div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT: Market -->
+      <aside id="market-panel" class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Singles Market</div>
+          <div class="market-sort">
+            <span class="sort-label">Sort by:</span>
+            <button class="sort-btn active" data-sort="rarity">Rarity</button>
+            <button class="sort-btn" data-sort="price">Price</button>
+            <button class="sort-btn" data-sort="missing">Missing</button>
+            <button class="sort-btn" data-sort="owned">Owned</button>
+          </div>
+        </div>
+        <div id="market-list" class="market-list"></div>
+        <div id="auction-listings" class="auction-listings hidden"></div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ── PACK OPENING OVERLAY ─────────────────────────────────── -->
+  <div id="pack-overlay" class="overlay hidden">
+    <div id="pack-stage">
+      <canvas id="pack-canvas" class="hidden"></canvas>
+      <div id="multi-reveal" class="multi-reveal hidden">
+        <div id="multi-reveal-title" class="multi-reveal-title"></div>
+        <div id="multi-reveal-grid" class="multi-reveal-grid"></div>
+      </div>
+      <button id="btn-collect-cards" class="btn-primary btn-large hidden">
+        Collect All Cards ✓
+      </button>
+      <button id="btn-skip-anim" class="skip-btn hidden">Skip ▶</button>
+    </div>
+  </div>
+
+  <!-- ── RUN COMPLETE OVERLAY ─────────────────────────────────── -->
+  <div id="complete-overlay" class="overlay hidden">
+    <div id="complete-modal" class="modal-box">
+      <div class="complete-icon">🏆</div>
+      <h1 id="complete-title">Set Complete!</h1>
+      <div id="complete-grade" class="grade-display"></div>
+      <div id="stars-earned" class="stars-earned hidden"></div>
+      <div id="lb-rank-banner" class="lb-rank-banner"></div>
+      <div id="complete-stats" class="complete-stats-grid"></div>
+      <div id="complete-breakdown" class="complete-breakdown"></div>
+      <div id="complete-commentary" class="complete-commentary"></div>
+      <div class="complete-actions">
+        <button id="btn-next-level" class="btn-primary btn-large hidden">Next Level ▶</button>
+        <button id="btn-new-run" class="btn-secondary btn-large">Play Again</button>
+        <button class="btn-secondary btn-leaderboard">🏆 Leaderboard</button>
+        <button id="btn-portal-complete" class="portal-btn">⬡ Vibe Jam Portal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CARD DETAIL POPUP ────────────────────────────────────── -->
+  <div id="card-popup-overlay" class="overlay hidden">
+    <div id="card-popup-box"></div>
+  </div>
+
+  <!-- ── CONFIRM DIALOG ───────────────────────────────────────── -->
+  <div id="confirm-dialog" class="overlay hidden">
+    <div class="confirm-modal">
+      <div class="confirm-icon">⚠️</div>
+      <p id="confirm-text" class="confirm-text"></p>
+      <div class="confirm-actions">
+        <button id="confirm-yes" class="btn-primary">Yes</button>
+        <button id="confirm-no"  class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NPC DIALOG ───────────────────────────────────────────── -->
+  <div id="npc-dialog" class="overlay hidden">
+    <div class="npc-modal">
+      <div class="npc-header">
+        <img id="npc-portrait" class="npc-portrait" src="" alt="" style="display:none">
+        <div class="npc-header-text">
+          <div id="npc-name" class="npc-name"></div>
+          <div id="npc-bio"  class="npc-bio"></div>
+        </div>
+      </div>
+      <div id="npc-msg"        class="npc-msg"></div>
+      <div id="npc-reward-row" class="npc-reward-row hidden">
+        <span class="npc-reward-icon">✓</span>
+        <span id="npc-reward-text" class="npc-reward-text"></span>
+      </div>
+      <div class="npc-actions">
+        <button id="npc-accept"  class="btn-primary">Accept</button>
+        <button id="npc-decline" class="btn-secondary">Decline</button>
+      </div>
+      <div id="npc-footer" class="npc-footer"></div>
+    </div>
+  </div>
+
+  <!-- ── DAILY DIGEST ─────────────────────────────────────────── -->
+  <div id="daily-digest" class="overlay hidden">
+    <div class="digest-modal">
+      <div class="digest-header">
+        <div class="digest-icon-main">📰</div>
+        <h2 class="digest-title">Morning Update</h2>
+        <div id="digest-day" class="digest-day">Day 2</div>
+      </div>
+      <div id="digest-list" class="digest-list"></div>
+      <button id="btn-digest-close" class="btn-primary btn-large" style="width:100%;margin-top:18px">Let's Go →</button>
+    </div>
+  </div>
+
+  <!-- ── CODEX SCREEN ────────────────────────────────────────── -->
+  <div id="codex-screen" class="overlay hidden">
+    <div class="codex-modal">
+      <div class="codex-header">
+        <h2 class="codex-title">📚 Codex</h2>
+        <button id="btn-close-codex" class="skill-close-btn">✕ Close</button>
+      </div>
+      <div class="codex-tabs">
+        <button class="codex-tab active" data-tab="cards">🃏 Cards</button>
+        <button class="codex-tab" data-tab="perks">⚡ Perks</button>
+        <button class="codex-tab" data-tab="npcs">👥 NPCs</button>
+      </div>
+      <div id="codex-content" class="codex-content"></div>
+    </div>
+  </div>
+
+  <!-- ── CONTACTS SCREEN ──────────────────────────────────────── -->
+  <div id="contacts-screen" class="overlay hidden">
+    <div class="contacts-modal">
+      <button id="btn-close-contacts" class="skill-close-btn">✕ Close</button>
+      <h2 class="contacts-title">👥 NPC Contacts</h2>
+      <p class="contacts-sub">Characters you've encountered this run. Each visits randomly — benefits are immediate, with no ongoing relationship.</p>
+      <div id="contacts-list" class="contacts-list"></div>
+    </div>
+  </div>
+
+  <!-- ── TUTORIAL ──────────────────────────────────────────────── -->
+  <!-- Dark backdrop: z-index 310. Highlighted panel sits at 315 above it. -->
+  <div id="tut-backdrop" class="hidden"></div>
+  <!-- Modal container: z-index 320, above both backdrop and panel. -->
+  <div id="tutorial-overlay" class="hidden">
+    <div class="tutorial-modal">
+      <div class="tut-icon">SH</div>
+      <h2 id="tut-title" class="tut-title"></h2>
+      <p  id="tut-text"  class="tut-text"></p>
+      <div class="tut-footer">
+        <span id="tut-counter" class="tut-counter">1 / 5</span>
+        <div class="tut-actions">
+          <button id="btn-tut-skip" class="btn-secondary">Skip</button>
+          <button id="btn-tut-next" class="btn-primary">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PORTAL RETURN ────────────────────────────────────────── -->
+  <div id="portal-return" class="hidden">
+    <button id="btn-return-portal" class="portal-return-btn">↩ Return to Previous Game</button>
+  </div>
+
+  <!-- ── PLAYER NAME PROMPT ───────────────────────────────────── -->
+  <div id="name-prompt" class="overlay hidden" style="z-index:350">
+    <div class="name-prompt-modal">
+      <div class="name-prompt-icon">SH</div>
+      <h2 class="name-prompt-title">What's your name, collector?</h2>
+      <p class="name-prompt-sub">Shown on leaderboards & ace discoveries. Max 20 characters.</p>
+      <input id="name-input" class="name-input" type="text" maxlength="20" autocomplete="off" spellcheck="false">
+      <button id="btn-name-confirm" class="btn-primary">Let's Go →</button>
+    </div>
+  </div>
+
+  <!-- ── ACE FOUND (local) ─────────────────────────────────────── -->
+  <div id="ace-found-overlay" class="overlay hidden" style="z-index:340">
+    <div class="ace-modal ace-local-modal">
+      <div class="ace-shimmer"></div>
+      <div class="ace-found-badge">ACE</div>
+      <div class="ace-found-emoji"></div>
+      <h2 class="ace-found-name"></h2>
+      <p  class="ace-found-flavor"></p>
+      <p  class="ace-found-status"></p>
+      <button class="btn-primary btn-ace-close">Amazing! ✨</button>
+    </div>
+  </div>
+
+  <!-- ── ACE FOUND (global celebration) ───────────────────────── -->
+  <div id="ace-global-overlay" class="overlay hidden" style="z-index:330">
+    <div class="ace-modal ace-global-modal">
+      <div class="ace-shimmer"></div>
+      <p  class="ace-global-headline">🌍 A NEW ACE WAS FOUND WORLDWIDE!</p>
+      <div class="ace-global-emoji"></div>
+      <h2 class="ace-global-name"></h2>
+      <p  class="ace-global-by"></p>
+      <p  class="ace-global-count"></p>
+      <button class="btn-secondary btn-ace-global-close" style="margin-top:12px">Close</button>
+    </div>
+  </div>
+
+  <!-- ── LEADERBOARD SCREEN ────────────────────────────────────── -->
+  <div id="leaderboard-screen" class="overlay hidden" style="z-index:320">
+    <div class="lb-modal">
+      <div class="lb-header">
+        <h2 class="lb-title">🏆 Leaderboards</h2>
+        <button id="btn-leaderboard-close" class="skill-close-btn">✕ Close</button>
+      </div>
+      <div class="lb-tabs">
+        <button class="lb-tab active" data-set="home">Home &amp; Farm</button>
+        <button class="lb-tab" data-set="aquatic">Aquatic</button>
+        <button class="lb-tab" data-set="desert">Desert</button>
+        <button class="lb-tab" data-set="savanna">Savanna</button>
+      </div>
+      <div id="leaderboard-content" class="lb-content"></div>
+    </div>
+  </div>
+
+  <!-- Tooltip -->
+  <div id="tooltip" class="tooltip hidden"></div>
+
+  <!-- Scripts -->
+  <script src="three.min.js"></script>
+  <script src="sounds.js"></script>
+  <script src="renderer.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

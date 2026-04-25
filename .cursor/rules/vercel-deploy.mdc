@@ -1,0 +1,16 @@
+---
+description: Deploy to Vercel production after code changes
+alwaysApply: true
+---
+
+# Vercel production deploy
+
+After **every** substantive change to this project (code, assets, config that affects the live app), run a production deploy from the repo root:
+
+```bash
+vercel --prod --yes
+```
+
+Do this **before** considering the task complete. If the command fails (auth, network), report the error and what the user should run locally.
+
+Skip only for: typo-only doc edits the user explicitly excludes, or pure local-only experiments the user asked not to ship.
