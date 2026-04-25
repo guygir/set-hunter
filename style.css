@@ -1966,7 +1966,11 @@ body > a[href*="vibej.am"] {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 2px;
+  width: 50px;
+  min-width: 50px;
+  flex: 0 0 50px;
 }
 .btn-icon-img {
   width: 28px; height: 28px; border-radius: 50%;

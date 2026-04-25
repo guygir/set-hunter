@@ -2622,7 +2622,7 @@ const TUTORIAL_STEPS = [
   { title: 'Your Collection (Center)', text: 'Track every card here. Missing cards appear faded. Duplicates show a gold badge. Use the filter tabs to show only what you need.',                         target: '#collection-panel' },
   { title: 'Singles Market (Right)',   text: 'Buy specific cards directly, or sell duplicates. Buying a single is a daily action and advances the day. Post an auction to get better prices — buyers appear over multiple days.', target: '#market-panel' },
   { title: 'Ace Cards & Community',    text: 'Ultra-rare Ace cards can appear as a 6th card in a pack. They can\'t be traded on the market — they\'re for your trophy case. Below your collection, Worldwide Ace Discoveries shows which aces players around the world have found first; everyone contributes to the same puzzle. Tap a glowing pip to zoom an ace.', target: '#ace-tracker-section' },
-  { title: 'Daily Allowance & Grade',  text: 'You earn a daily allowance each day. Complete the set faster for a higher grade: S by day 15, A by day 20, B by day 25, and C by day 30. Good luck!', target: '#hud' },
+  { title: 'Daily Allowance & Grade',  text: 'You earn a daily allowance each day. Complete the set faster for a higher grade: S by day 15, A by day 20, B by day 25, and C by day 30. Good luck!', target: '.hud-center' },
   { title: 'Upper Deck Buttons',        text: 'The top buttons handle quick tools: BUG opens a GitHub bug report, Sound toggles audio, Skills opens upgrades, Codex shows discovered info, NPCs lists contacts, Guide replays this tutorial, Ranks opens leaderboards, Menu returns home, and Portal jumps to another Vibe Jam game.', target: '.hud-right' },
 ];
 
@@ -2847,29 +2847,48 @@ function closeBugReportDialog() {
   document.getElementById('bug-report-dialog')?.classList.add('hidden');
 }
 
-function openGitHubBugIssue() {
+async function submitBugReport() {
   const input = document.getElementById('bug-report-input');
+  const submitBtn = document.getElementById('bug-report-submit');
   const report = sanitizeBugReport(input?.value);
   if (!report) {
     showToast('Please describe the bug first.', 'warning');
     return;
   }
 
-  const p = new URLSearchParams();
-  p.set('title', `Bug report: ${report.slice(0, 60)}`);
-  p.set('body', [
-    '### What went wrong?',
-    report,
-    '',
-    '### Context',
-    `URL: ${location.href}`,
-    G ? `Set: ${G.currentSet?.name || 'Unknown'} | Day: ${G.day} | Budget: ${fmt(G.budget)}` : 'Set: not in a run',
-    `Browser: ${navigator.userAgent}`,
-  ].join('\n'));
-  p.set('labels', 'bug');
+  const previousLabel = submitBtn?.textContent;
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+  }
 
-  window.open(`https://github.com/${BUG_REPORT_REPO}/issues/new?${p.toString()}`, '_blank', 'noopener');
-  closeBugReportDialog();
+  try {
+    const r = await fetch('/api/report-bug', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        report,
+        player_name: getPlayerName() || 'Anonymous',
+        url: location.href,
+        set_name: G?.currentSet?.name || '',
+        day: G?.day || null,
+        budget: G ? fmt(G.budget) : '',
+        browser: navigator.userAgent,
+      }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || 'Bug report failed');
+    closeBugReportDialog();
+    showToast('Bug report submitted. Thank you!', 'success');
+    if (data.url) window.open(data.url, '_blank', 'noopener');
+  } catch (err) {
+    showToast(`Could not submit bug report: ${err.message}`, 'danger');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = previousLabel || 'Submit Bug';
+    }
+  }
 }
 
 function showAceInfoPopup() {
@@ -4471,7 +4490,7 @@ function setupListeners() {
   const bugDialog = document.getElementById('bug-report-dialog');
   const bugInput = document.getElementById('bug-report-input');
   bugInput?.addEventListener('input', updateBugReportCount);
-  document.getElementById('bug-report-submit')?.addEventListener('click', openGitHubBugIssue);
+  document.getElementById('bug-report-submit')?.addEventListener('click', submitBugReport);
   document.getElementById('bug-report-cancel')?.addEventListener('click', closeBugReportDialog);
   bugDialog?.addEventListener('click', e => {
     if (e.target === bugDialog) closeBugReportDialog();
