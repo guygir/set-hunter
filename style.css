@@ -1998,6 +1998,308 @@ body > a[href*="vibej.am"] {
 .icon-btn:hover .btn-label { color: var(--text-hi); }
 
 /* ════════════════════════════════════════════════════════════════
+   MOBILE GAME LAYOUT
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+  body {
+    height: auto;
+    min-height: 100svh;
+    overflow: auto;
+    user-select: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  #game-screen {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+
+  #hud {
+    position: sticky;
+    top: 0;
+    height: auto;
+    min-height: 58px;
+    padding: 8px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .hud-left {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-width: 0;
+    order: 1;
+  }
+
+  .hud-center {
+    flex: 1 1 100%;
+    justify-content: space-around;
+    gap: 6px;
+    order: 2;
+  }
+
+  .hud-right {
+    flex: 1 1 100%;
+    order: 3;
+    gap: 6px;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .set-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .stat-block {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .stat-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .debt-indicator {
+    flex: 1 1 100%;
+    text-align: center;
+    order: 4;
+  }
+
+  .icon-btn {
+    width: 46px;
+    min-width: 46px;
+    flex-basis: 46px;
+  }
+
+  .btn-icon-img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .btn-label {
+    font-size: 8px;
+    letter-spacing: .5px;
+  }
+
+  .portal-btn {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 7px 12px;
+    white-space: nowrap;
+  }
+
+  #event-banner {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  #main-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .panel {
+    overflow: visible;
+    border-right: none;
+    border-bottom: 1px solid var(--border-dim);
+    min-height: auto;
+  }
+
+  .panel-title {
+    padding: 11px 12px 9px;
+    letter-spacing: 2px;
+  }
+
+  #shop-panel {
+    order: 1;
+  }
+
+  #collection-panel {
+    order: 2;
+  }
+
+  #market-panel {
+    order: 3;
+    border-bottom: none;
+  }
+
+  .pack-container {
+    padding: 10px 12px 6px;
+    gap: 6px;
+  }
+
+  .pack-visual {
+    width: 104px;
+    height: 148px;
+  }
+
+  .pack-logo {
+    font-size: 28px;
+  }
+
+  .pack-cards-label,
+  .pack-set-label {
+    font-size: 10px;
+  }
+
+  .shop-buttons {
+    padding: 8px 12px 10px;
+    gap: 7px;
+  }
+
+  .shop-buttons button,
+  .market-actions button {
+    min-height: 40px;
+  }
+
+  .shop-odds {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 10px;
+    padding: 8px 12px 12px;
+  }
+
+  .odds-row {
+    font-size: 11px;
+  }
+
+  .panel-header-row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  #filter-tabs,
+  #sort-tabs {
+    flex-wrap: wrap;
+  }
+
+  .card-grid {
+    max-height: 64svh;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    row-gap: 16px;
+    padding: 8px 8px 14px;
+  }
+
+  .card-name {
+    font-size: 7px;
+  }
+
+  .ace-tracker-section {
+    padding: 10px 8px 12px;
+  }
+
+  .ace-tracker-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ace-tracker-hero {
+    width: 76px;
+    height: 76px;
+  }
+
+  .ace-circles-wrap-lg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .ace-pip-lg {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .market-list {
+    max-height: 68svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .market-item {
+    min-height: 52px;
+    padding: 8px;
+  }
+
+  .m-actions {
+    gap: 4px;
+  }
+
+  .m-buy-btn,
+  .m-sell-btn,
+  .m-auction-btn,
+  .m-dibs-btn {
+    min-height: 32px;
+    padding: 5px 7px;
+  }
+
+  .perk-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-modal,
+  .contacts-modal,
+  .codex-modal,
+  .leaderboard-modal,
+  .bug-report-modal,
+  .confirm-modal,
+  .modal-box {
+    width: calc(100vw - 24px);
+    max-height: 88svh;
+    padding: 22px 18px;
+  }
+}
+
+@media (max-width: 430px) {
+  .hud-right {
+    margin: 0 -2px;
+  }
+
+  .icon-btn {
+    width: 43px;
+    min-width: 43px;
+    flex-basis: 43px;
+  }
+
+  .portal-btn {
+    font-size: 11px;
+  }
+
+  .shop-odds {
+    grid-template-columns: 1fr;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+
+  .market-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .m-info {
+    flex-basis: calc(100% - 42px);
+  }
+
+  .m-actions {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
    ACE COLLECTION MODAL
    ════════════════════════════════════════════════════════════════ */
 .ace-coll-modal {
