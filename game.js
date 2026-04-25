@@ -1304,6 +1304,7 @@ function createState(setDef) {
     npcChanceToday: 0,
     npcEncounteredToday: false,
     npcMeetings: 0,
+    eventForecast: null,
     auctionSales: 0,
     marketFreezeUntil: 0,
     maxAuctionSlots: CONFIG.baseAuctionSlots,
@@ -1570,6 +1571,28 @@ function fluctuateMarket() {
   }
 }
 
+function shouldForecastEvents() {
+  return !!(G && (G.oracleTier >= 2 || G.insiderPerkActive));
+}
+
+function ensureEventForecast() {
+  if (!shouldForecastEvents()) return null;
+  if (G.eventForecast) return G.eventForecast;
+  const willFire = Math.random() < G.eventChance;
+  const event = willFire ? randFrom(EVENTS) : null;
+  G.eventForecast = {
+    willFire,
+    eventId: event ? event.id : null,
+  };
+  return G.eventForecast;
+}
+
+function eventFromForecast(forecast) {
+  return forecast && forecast.eventId
+    ? EVENTS.find(e => e.id === forecast.eventId) || null
+    : null;
+}
+
 /* ════════════════════════════════════════════════════════════════
    EVENT ROLLING
    ════════════════════════════════════════════════════════════════ */
@@ -1579,23 +1602,18 @@ function rollEvent() {
     G.activeEvent = null;
   }
 
-  if (Math.random() > G.eventChance) {
+  const forecast = G.eventForecast;
+  G.eventForecast = null;
+  const forecastEvent = eventFromForecast(forecast);
+  const eventFires = forecast ? !!forecast.willFire : Math.random() <= G.eventChance;
+
+  if (!eventFires) {
     document.getElementById('event-banner')?.classList.add('hidden');
     Sounds.setAmbientState('normal');
-    // Oracle T2 hint
-    if (G.oracleTier >= 2 || G.insiderPerkActive) {
-      const willFire = Math.random() < G.eventChance;
-      if (willFire) {
-        const hint = randFrom(EVENTS);
-        G.oracleEventHint = `📡 Forecast: ${hint.icon} ${hint.title}`;
-      } else {
-        G.oracleEventHint = '📡 Forecast: Quiet day ahead';
-      }
-    }
     return;
   }
 
-  const ev = randFrom(EVENTS);
+  const ev = forecastEvent || randFrom(EVENTS);
   if (G.timekeeperTier >= 2 && ev.negative) {
     Sounds.setAmbientState('normal');
     showEventBanner('timekeeper_skip', '⌛', `Timekeeper blocked bad event: ${ev.title}`);
@@ -1605,7 +1623,6 @@ function rollEvent() {
   G.activeEvent = ev;
   Sounds.setAmbientState(ev.ambState || 'normal');
 
-  if (G.oracleEventHint) G.oracleEventHint = null;
   showEventBanner(ev.id, ev.icon, ev.title + ' — ' + ev.buildDesc(G));
 }
 
@@ -1967,6 +1984,7 @@ function actionSellAllDupes() {
 
 /* Shared helper — show digest then advance the day (used by all daily actions) */
 function endDayWithDigest() {
+  if (G.completed) return;
   Sounds.play('dayPass');
   const digestItems = buildDigestItems();
   showDailyDigest(digestItems, () => {
@@ -2071,7 +2089,7 @@ function advanceDay() {
       G.totalSpent += amt;
       showToast(`💸 Paid back Big Mike $${amt}`, 'warning');
     } else {
-      G.budget = Math.max(0, G.budget - pen);
+      G.budget -= pen;
       G.totalSpent += pen;
       showToast(`💀 Big Mike collected $${pen} penalty!`, 'danger');
     }
@@ -2091,12 +2109,6 @@ function advanceDay() {
   // State-reactive ambient based on budget/day
   if (G.budget < 30 || G.day > 40) {
     Sounds.setAmbientState('tense');
-  }
-
-  // Oracle event hint display (shown once, then cleared)
-  if (G.oracleEventHint) {
-    showEventBanner('oracle_hint', '📡', G.oracleEventHint);
-    G.oracleEventHint = null;
   }
 
   // Second perk offer at day 10
@@ -2138,6 +2150,16 @@ function buildDigestItems() {
   // Active market event
   if (G.activeEvent) {
     items.push({ icon: G.activeEvent.icon, text: `Event finished: ${G.activeEvent.title} — ${G.activeEvent.buildDesc(G)}`, type: 'event' });
+  }
+
+  // Tomorrow's event forecast from Insider perk / Oracle T2+
+  const forecast = ensureEventForecast();
+  if (forecast) {
+    const ev = eventFromForecast(forecast);
+    const text = ev
+      ? `Tomorrow's forecast: ${ev.title} — ${ev.buildDesc(G)}`
+      : "Tomorrow's forecast: Quiet day ahead";
+    items.push({ icon: ev ? ev.icon : '📡', text, type: 'neutral' });
   }
 
   // Auction listings — buyer chance preview
