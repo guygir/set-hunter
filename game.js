@@ -2899,6 +2899,23 @@ function showAceInfoPopup() {
   );
 }
 
+function syncMobileAcePlacement() {
+  const ace = document.getElementById('ace-tracker-section');
+  const grid = document.getElementById('collection-grid');
+  const layout = document.getElementById('main-layout');
+  const market = document.getElementById('market-panel');
+  if (!ace || !grid || !layout || !market) return;
+
+  const isMobile = window.matchMedia('(max-width: 820px)').matches;
+  if (isMobile) {
+    if (ace.parentElement !== layout) {
+      layout.insertBefore(ace, market.nextSibling);
+    }
+  } else if (ace.parentElement !== document.getElementById('collection-panel')) {
+    grid.insertAdjacentElement('afterend', ace);
+  }
+}
+
 /* ════════════════════════════════════════════════════════════════
    RENDERING
    ════════════════════════════════════════════════════════════════ */
@@ -4650,8 +4667,12 @@ function setupListeners() {
     startCascadePreload();
   });
 
-  window.addEventListener('resize', scheduleCollectionGridLayout, { passive: true });
+  window.addEventListener('resize', () => {
+    scheduleCollectionGridLayout();
+    syncMobileAcePlacement();
+  }, { passive: true });
   scheduleCollectionGridLayout();
+  syncMobileAcePlacement();
 
   setupPortal();
 

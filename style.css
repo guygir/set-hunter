@@ -2044,8 +2044,9 @@ body > a[href*="vibej.am"] {
     flex: 1 1 100%;
     order: 3;
     gap: 6px;
-    overflow-x: auto;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
     padding-bottom: 2px;
     -webkit-overflow-scrolling: touch;
   }
@@ -2093,10 +2094,11 @@ body > a[href*="vibej.am"] {
   }
 
   .portal-btn {
-    flex: 0 0 auto;
+    flex: 1 1 100%;
     min-height: 42px;
     padding: 7px 12px;
     white-space: nowrap;
+    text-align: center;
   }
 
   #event-banner {
@@ -2133,6 +2135,10 @@ body > a[href*="vibej.am"] {
 
   #market-panel {
     order: 3;
+  }
+
+  #ace-tracker-section {
+    order: 4;
     border-bottom: none;
   }
 
@@ -2212,8 +2218,9 @@ body > a[href*="vibej.am"] {
   }
 
   .ace-circles-wrap-lg {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 10px 14px;
+    width: min(260px, 100%);
   }
 
   .ace-pip-lg {
@@ -2246,6 +2253,131 @@ body > a[href*="vibej.am"] {
 
   .perk-grid {
     grid-template-columns: 1fr;
+  }
+
+  #intro-screen {
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 18px 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .intro-content {
+    width: 100%;
+    max-width: 420px;
+    padding-bottom: 18px;
+  }
+
+  .intro-title {
+    font-size: clamp(38px, 12vw, 56px);
+    letter-spacing: 4px;
+  }
+
+  .intro-card-backs {
+    height: 132px;
+    margin: 8px 0 14px;
+  }
+
+  .intro-card-backs .pack-visual.intro-pack-card {
+    width: 84px;
+    height: 120px;
+    margin: 0 -8px;
+  }
+
+  .intro-pack-card .pack-logo img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .intro-subtitle {
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .intro-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+
+  .intro-actions {
+    flex-direction: column;
+    gap: 9px;
+    align-items: stretch;
+    width: min(280px, 100%);
+    margin: 0 auto;
+  }
+
+  .intro-actions button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .intro-ace-header {
+    margin-top: 18px;
+    gap: 8px;
+  }
+
+  .intro-ace-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .intro-ace-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  #level-select,
+  #perk-screen {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 14px 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .level-select-modal,
+  .perk-modal {
+    width: calc(100vw - 20px);
+    max-height: none;
+    padding: 22px 16px;
+    margin: auto 0;
+  }
+
+  .level-select-title,
+  .perk-modal-title {
+    font-size: 21px;
+  }
+
+  .level-select-sub,
+  .perk-modal-sub {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .level-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .level-card {
+    padding: 14px 12px;
+  }
+
+  .lc-theme .set-theme-art,
+  .perk-art {
+    width: 52px;
+    height: 52px;
+  }
+
+  .perk-modal-header {
+    margin-bottom: 18px;
+  }
+
+  .perk-card {
+    padding: 14px 12px;
   }
 
   .skill-modal,
