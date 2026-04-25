@@ -508,6 +508,7 @@ BUTTONS = {
     "cardmode":    ("Card Art Mode",  "playing card overlaid with artist palette and paintbrush, art style toggle"),
     "leaderboard": ("Leaderboard",    "gleaming gold trophy cup with laurel wreath, championship first place"),
     "menu":        ("Main Menu",      "three stacked trading cards with golden edges and a small home doorway symbol, return to main menu, warm gold and purple accents, clear at small icon size"),
+    "bug":         ("Bug Report",     "friendly tiny beetle bug holding a warning sign, software bug report icon, warm gold and purple accents, clear at small icon size"),
     "portal":      ("Vibe Jam Portal","glowing hexagonal portal vortex swirling with colorful light beams"),
 }
 

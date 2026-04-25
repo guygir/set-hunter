@@ -123,6 +123,9 @@
         <div id="debt-indicator" class="debt-indicator hidden"></div>
       </div>
       <div class="hud-section hud-right">
+        <button id="btn-bug-report"      class="mute-btn icon-btn" title="Report a bug">
+          <img src="assets/buttons/bug.png" class="btn-icon-img" alt="Bug" onerror="this.outerHTML='Bug'">
+          <span class="btn-label">BUG</span></button>
         <button id="btn-mute"           class="mute-btn icon-btn" title="Toggle sound">
           <img src="assets/buttons/sound.png" class="btn-icon-img" alt="🔊" onerror="this.outerHTML='🔊'">
           <span class="btn-label">Sound</span></button>
@@ -291,6 +294,21 @@
       <div class="confirm-actions">
         <button id="confirm-yes" class="btn-primary">Yes</button>
         <button id="confirm-no"  class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BUG REPORT ───────────────────────────────────────────── -->
+  <div id="bug-report-dialog" class="overlay hidden">
+    <div class="bug-report-modal">
+      <h2 class="bug-report-title">Report a Bug</h2>
+      <p class="bug-report-sub">Tell us what went wrong. Please keep it short and specific.</p>
+      <textarea id="bug-report-input" class="bug-report-input" maxlength="200"
+        placeholder="Describe the bug you encountered..."></textarea>
+      <div class="bug-report-meta"><span id="bug-report-count">0</span>/200</div>
+      <div class="confirm-actions">
+        <button id="bug-report-submit" class="btn-primary">Open GitHub Issue</button>
+        <button id="bug-report-cancel" class="btn-secondary">Cancel</button>
       </div>
     </div>
   </div>

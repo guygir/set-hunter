@@ -2623,6 +2623,7 @@ const TUTORIAL_STEPS = [
   { title: 'Singles Market (Right)',   text: 'Buy specific cards directly, or sell duplicates. Buying a single is a daily action and advances the day. Post an auction to get better prices — buyers appear over multiple days.', target: '#market-panel' },
   { title: 'Ace Cards & Community',    text: 'Ultra-rare Ace cards can appear as a 6th card in a pack. They can\'t be traded on the market — they\'re for your trophy case. Below your collection, Worldwide Ace Discoveries shows which aces players around the world have found first; everyone contributes to the same puzzle. Tap a glowing pip to zoom an ace.', target: '#ace-tracker-section' },
   { title: 'Daily Allowance & Grade',  text: 'You earn a daily allowance each day. Complete the set faster for a higher grade: S by day 15, A by day 20, B by day 25, and C by day 30. Good luck!', target: '#hud' },
+  { title: 'Upper Deck Buttons',        text: 'The top buttons handle quick tools: BUG opens a GitHub bug report, Sound toggles audio, Skills opens upgrades, Codex shows discovered info, NPCs lists contacts, Guide replays this tutorial, Ranks opens leaderboards, Menu returns home, and Portal jumps to another Vibe Jam game.', target: '.hud-right' },
 ];
 
 let _tutStep = 0;
@@ -2807,6 +2808,68 @@ function returnToMainMenu() {
       document.getElementById('intro-screen')?.classList.remove('hidden');
     }
   );
+}
+
+/* ════════════════════════════════════════════════════════════════
+   BUG REPORT
+   ════════════════════════════════════════════════════════════════ */
+const BUG_REPORT_REPO = 'guygir/set-hunter';
+const BUG_REPORT_MAX_LEN = 200;
+
+function sanitizeBugReport(raw) {
+  return String(raw || '')
+    .normalize('NFKC')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/[<>`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, BUG_REPORT_MAX_LEN);
+}
+
+function updateBugReportCount() {
+  const input = document.getElementById('bug-report-input');
+  const count = document.getElementById('bug-report-count');
+  if (!input || !count) return;
+  count.textContent = String(sanitizeBugReport(input.value).length);
+}
+
+function showBugReportDialog() {
+  const dialog = document.getElementById('bug-report-dialog');
+  const input = document.getElementById('bug-report-input');
+  if (!dialog || !input) return;
+  input.value = '';
+  updateBugReportCount();
+  dialog.classList.remove('hidden');
+  setTimeout(() => input.focus(), 0);
+}
+
+function closeBugReportDialog() {
+  document.getElementById('bug-report-dialog')?.classList.add('hidden');
+}
+
+function openGitHubBugIssue() {
+  const input = document.getElementById('bug-report-input');
+  const report = sanitizeBugReport(input?.value);
+  if (!report) {
+    showToast('Please describe the bug first.', 'warning');
+    return;
+  }
+
+  const p = new URLSearchParams();
+  p.set('title', `Bug report: ${report.slice(0, 60)}`);
+  p.set('body', [
+    '### What went wrong?',
+    report,
+    '',
+    '### Context',
+    `URL: ${location.href}`,
+    G ? `Set: ${G.currentSet?.name || 'Unknown'} | Day: ${G.day} | Budget: ${fmt(G.budget)}` : 'Set: not in a run',
+    `Browser: ${navigator.userAgent}`,
+  ].join('\n'));
+  p.set('labels', 'bug');
+
+  window.open(`https://github.com/${BUG_REPORT_REPO}/issues/new?${p.toString()}`, '_blank', 'noopener');
+  closeBugReportDialog();
 }
 
 function showAceInfoPopup() {
@@ -4355,6 +4418,7 @@ function setupListeners() {
   document.getElementById('btn-thief-claim')?.addEventListener('click', actionThiefClaim);
   document.getElementById('btn-timekeeper-rewind')?.addEventListener('click', actionTimekeeperRewind);
   document.getElementById('btn-main-menu')?.addEventListener('click', returnToMainMenu);
+  document.getElementById('btn-bug-report')?.addEventListener('click', showBugReportDialog);
 
   document.getElementById('btn-sell-all-dupes').addEventListener('click', actionSellAllDupes);
 
@@ -4402,6 +4466,15 @@ function setupListeners() {
   document.getElementById('confirm-no').addEventListener('click', () => {
     document.getElementById('confirm-dialog').classList.add('hidden');
     _confirmCallback = null;
+  });
+
+  const bugDialog = document.getElementById('bug-report-dialog');
+  const bugInput = document.getElementById('bug-report-input');
+  bugInput?.addEventListener('input', updateBugReportCount);
+  document.getElementById('bug-report-submit')?.addEventListener('click', openGitHubBugIssue);
+  document.getElementById('bug-report-cancel')?.addEventListener('click', closeBugReportDialog);
+  bugDialog?.addEventListener('click', e => {
+    if (e.target === bugDialog) closeBugReportDialog();
   });
 
   // NPC dialog

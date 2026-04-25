@@ -125,7 +125,7 @@ Main prizes (Gold/Silver/Bronze) are jury-judged. The widget tracks unique visit
 | Source/generate SFX and ambient music, integrate AudioContext engine | ✅ Completed (Web Audio synthesis) |
 | Add mandatory vibej.am widget.js snippet to HTML | ✅ Completed |
 | Integrate optional portal system | ✅ Completed (click-to-portal, see adjustment above) |
-| Deploy to public domain | ✅ Completed — https://pack-rat-game.vercel.app |
+| Deploy to public domain | ✅ Completed — https://set-hunter-game.vercel.app |
 
 ---
 
@@ -821,7 +821,7 @@ vercel --prod --yes
 - [ ] **Submit at vibej.am/2026 → Submit Your Game** ← needs to be done manually
 - [ ] Add a custom domain for better portal tracking (optional but recommended)
 
-**Submit URL:** `https://pack-rat-game.vercel.app`
+**Submit URL:** `https://set-hunter-game.vercel.app`
 
 ---
 

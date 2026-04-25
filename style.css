@@ -669,6 +669,7 @@ body {
 #npc-dialog       { z-index: 310; }
 #contacts-screen  { z-index: 310; }
 #confirm-dialog   { z-index: 310; }
+#bug-report-dialog { z-index: 310; }
 #complete-overlay { z-index: 310; }
 #pack-overlay     { z-index: 310; }
 
@@ -890,6 +891,35 @@ body {
 .confirm-icon { font-size: 40px; margin-bottom: 12px; }
 .confirm-text { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 22px; }
 .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+.bug-report-modal {
+  background: var(--bg-2); border: 1px solid rgba(255,170,34,.3);
+  border-radius: var(--r-xl); padding: 28px 32px; max-width: 430px; width: 90%;
+  animation: modalPop .3s ease;
+}
+.bug-report-title {
+  font-size: 18px; font-weight: 900; text-align: center; margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.bug-report-sub {
+  font-size: 13px; color: var(--text-mid); line-height: 1.5;
+  text-align: center; margin-bottom: 14px;
+}
+.bug-report-input {
+  width: 100%; min-height: 112px; resize: none;
+  background: var(--bg-1); border: 1px solid var(--border-mid);
+  border-radius: var(--r-md); color: var(--text-hi);
+  padding: 12px; font-family: inherit; font-size: 14px; line-height: 1.45;
+  outline: none;
+}
+.bug-report-input:focus {
+  border-color: rgba(255,170,34,.55);
+  box-shadow: 0 0 0 2px rgba(255,170,34,.12);
+}
+.bug-report-meta {
+  text-align: right; font-size: 11px; color: var(--text-lo);
+  margin: 6px 2px 16px;
+}
 
 /* ════════════════════════════════════════════════════════════════
    NPC DIALOG — chat-bubble style, bottom-right, semi-transparent
