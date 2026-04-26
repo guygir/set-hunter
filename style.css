@@ -246,6 +246,27 @@ body {
   background: linear-gradient(135deg, #550099, #9933ff);
   box-shadow: 0 0 18px rgba(153,68,255,.55);
 }
+.kofi-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  background: linear-gradient(135deg, rgba(255,170,34,.18), rgba(153,68,255,.24));
+  color: var(--text-hi); border: 1px solid rgba(255,170,34,.42);
+  padding: 7px 14px; border-radius: var(--r-md);
+  font-family: var(--font); font-size: 12px; font-weight: 800;
+  cursor: pointer; letter-spacing: .3px; text-decoration: none;
+  transition: box-shadow .2s, background .2s, border-color .2s, transform .15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18), 0 0 22px -8px rgba(255,170,34,.75);
+}
+.kofi-btn:hover {
+  background: linear-gradient(135deg, rgba(255,170,34,.28), rgba(153,68,255,.34));
+  border-color: rgba(255,170,34,.7);
+  box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 26px -6px rgba(255,170,34,.85);
+  transform: translateY(-1px);
+}
+.kofi-icon {
+  flex: 0 0 auto;
+  fill: var(--c-gold);
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,.35));
+}
 
 /* ════════════════════════════════════════════════════════════════
    EVENT BANNER
@@ -815,7 +836,15 @@ body {
   margin-bottom: 4px;
 }
 
-.complete-actions { display: flex; gap: 12px; justify-content: center; }
+.complete-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  max-width: 470px; margin: 0 auto;
+}
+.complete-actions > button {
+  flex: 1 1 200px;
+  max-width: 220px;
+  white-space: nowrap;
+}
 
 /* ── Portal Return ── */
 #portal-return { position: fixed; bottom: 18px; left: 18px; z-index: 20; }
@@ -2038,6 +2067,7 @@ body > a[href*="vibej.am"] {
     justify-content: space-around;
     gap: 6px;
     order: 2;
+    flex-wrap: wrap;
   }
 
   .hud-right {
@@ -2060,6 +2090,7 @@ body > a[href*="vibej.am"] {
   .stat-block {
     flex: 1 1 0;
     min-width: 0;
+    order: 1;
   }
 
   .stat-label {
@@ -2072,9 +2103,28 @@ body > a[href*="vibej.am"] {
   }
 
   .debt-indicator {
-    flex: 1 1 100%;
+    flex: 0 1 auto;
     text-align: center;
-    order: 4;
+    order: 2;
+    max-width: 100%;
+    margin: 1px auto 0;
+    padding: 2px 6px;
+    font-size: 9px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .perk-badge {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .perk-badge-item {
+    padding: 2px 6px;
+    font-size: 9px;
+    line-height: 1.2;
   }
 
   .icon-btn {
@@ -2093,8 +2143,9 @@ body > a[href*="vibej.am"] {
     letter-spacing: .5px;
   }
 
-  .portal-btn {
-    flex: 1 1 100%;
+  .portal-btn,
+  .kofi-btn {
+    flex: 1 1 calc(50% - 3px);
     min-height: 42px;
     padding: 7px 12px;
     white-space: nowrap;
@@ -2391,6 +2442,19 @@ body > a[href*="vibej.am"] {
     max-height: 88svh;
     padding: 22px 18px;
   }
+
+  .complete-actions {
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .complete-actions > button {
+    flex: 1 1 calc(50% - 8px);
+    max-width: none;
+    min-width: 138px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }
 
 @media (max-width: 430px) {
@@ -2404,7 +2468,8 @@ body > a[href*="vibej.am"] {
     flex-basis: 43px;
   }
 
-  .portal-btn {
+  .portal-btn,
+  .kofi-btn {
     font-size: 11px;
   }
 

@@ -2623,7 +2623,7 @@ const TUTORIAL_STEPS = [
   { title: 'Singles Market (Right)',   text: 'Buy specific cards directly, or sell duplicates. Buying a single is a daily action and advances the day. Post an auction to get better prices — buyers appear over multiple days.', target: '#market-panel' },
   { title: 'Ace Cards & Community',    text: 'Ultra-rare Ace cards can appear as a 6th card in a pack. They can\'t be traded on the market — they\'re for your trophy case. Below your collection, Worldwide Ace Discoveries shows which aces players around the world have found first; everyone contributes to the same puzzle. Tap a glowing pip to zoom an ace.', target: '#ace-tracker-section' },
   { title: 'Daily Allowance & Grade',  text: 'You earn a daily allowance each day. Complete the set faster for a higher grade: S by day 15, A by day 20, B by day 25, and C by day 30. Good luck!', target: '.hud-center' },
-  { title: 'Upper Deck Buttons',        text: 'The top buttons handle quick tools: BUG opens a GitHub bug report, Sound toggles audio, Skills opens upgrades, Codex shows discovered info, NPCs lists contacts, Guide replays this tutorial, Ranks opens leaderboards, Menu returns home, and Portal jumps to another Vibe Jam game.', target: '.hud-right' },
+  { title: 'Upper Deck Buttons',        text: 'The top buttons handle quick tools: BUG opens a GitHub bug report, Sound toggles audio, Skills opens upgrades, Codex shows discovered info, NPCs lists contacts, Guide replays this tutorial, Ranks opens leaderboards, Menu returns home, Portal jumps to another Vibe Jam game, and Support me opens an optional Ko-fi link.', target: '.hud-right' },
 ];
 
 let _tutStep = 0;
